@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>608FE002-84BC-4939-AFB2-C6AFAE6E62AF</title>
+    <defs>
+        <filter color-interpolation-filters="auto" id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.200000 0 0 0 0 0.800000 0 0 0 0 0.400000 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Checkout" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Checkout---Step-3---Payment---new-user-(coupon-entered)" transform="translate(-850.000000, -334.000000)">
+            <g id="Right-screen" transform="translate(742.000000, 200.000000)">
+                <g id="Group-5" transform="translate(44.000000, 42.000000)">
+                    <g id="Group-3" transform="translate(0.000000, 80.000000)">
+                        <g id="Group-2" transform="translate(35.000000, 12.000000)">
+                            <g id="No-payment" transform="translate(29.000000, 0.000000)" filter="url(#filter-1)">
+                                <g transform="translate(0.000000, 1.454545)">
+                                    <path d="M21.85,23.91875 L3.35,23.91875 C2.40625,23.91875 1.64375,23.15 1.64375,22.2125 L1.64375,10.89375 L8.81875,10.89375 L7.175,9.25 L1.64375,9.25 L1.64375,7.0375 C1.64375,6.125 2.35625,5.38125 3.25625,5.33125 L1.93125,4 C0.7875,4.5375 0,5.69375 0,7.0375 L0,22.2125 C0,24.0625 1.50625,25.5625 3.35,25.5625 L23.4875,25.5625 L21.85,23.91875 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
+                                    <path d="M28.65,3.68125 L6.2125,3.68125 L2.56875,0.04375 L1.41875,1.19375 L3.9125,3.6875 L3.9125,3.6875 L5.55625,5.33125 L5.55625,5.33125 L9.475,9.25 L9.475,9.25 L11.11875,10.89375 L11.11875,10.89375 L24.14375,23.91875 L24.14375,23.91875 L25.7875,25.5625 L25.7875,25.5625 L29.43125,29.20625 L30.58125,28.05625 L28.0875,25.5625 L28.64375,25.5625 C30.49375,25.5625 31.9937694,24.05625 31.9937694,22.2125 L31.9937694,7.0375 C32,5.1875 30.49375,3.68125 28.65,3.68125 Z M30.35625,22.2125 C30.35625,23.15625 29.5875,23.91875 28.65,23.91875 L26.45,23.91875 L13.41875,10.89375 L30.35625,10.89375 L30.35625,22.2125 Z M30.35625,9.25 L11.775,9.25 L7.85625,5.33125 L28.65,5.33125 C29.59375,5.33125 30.35625,6.1 30.35625,7.0375 L30.35625,9.25 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

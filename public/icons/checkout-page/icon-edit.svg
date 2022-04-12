@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="18px" viewBox="0 0 19 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>907DD360-755C-48E7-8CE4-D93723C28A3D</title>
+    <defs>
+        <filter color-interpolation-filters="auto" id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.200000 0 0 0 0 0.800000 0 0 0 0 0.400000 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Checkout" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Checkout---Step-3---Payment---new-user-(coupon-entered)" transform="translate(-406.000000, -274.000000)">
+            <g id="order-summery" transform="translate(390.000000, 200.000000)">
+                <g id="Order-summery/item" transform="translate(16.000000, 64.000000)">
+                    <g id="Shape-2" transform="translate(0.000000, 10.000000)" filter="url(#filter-1)">
+                        <g>
+                            <path d="M17.6859862,4.11666667 L13.80594,0.25 C13.4714533,-0.0833333333 12.9362745,-0.0833333333 12.5348904,0.25 L1.56372549,11.1833333 C1.4299308,11.3166667 1.2961361,11.45 1.2961361,11.65 L0.0250865052,16.7833333 C-0.041810842,17.05 0.0250865052,17.3833333 0.225778547,17.65 C0.426470588,17.85 0.62716263,17.9166667 0.827854671,17.9166667 C0.894752018,17.9166667 0.961649366,17.9166667 1.02854671,17.9166667 L6.24653979,16.5833333 C6.38033449,16.5166667 6.51412918,16.45 6.64792388,16.3166667 L17.6859862,5.31666667 C18.0204729,4.98333333 18.0204729,4.45 17.6859862,4.11666667 Z M13.2707612,7.31666667 L5.64446367,14.85 L2.16580161,15.7166667 L3.03546713,12.25 L10.5948674,4.65 L13.2707612,7.31666667 Z M15.8128604,4.71666667 L14.4749135,6.05 L11.865917,3.45 L13.2038639,2.11666667 L15.8128604,4.71666667 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
