@@ -1,5 +1,6 @@
 import { ProductRawData } from '../types/appTypes';
 import { GlobalContext } from "../context/context";
+import React from "react";
 
 /**
  * Add product to cart.
@@ -7,7 +8,7 @@ import { GlobalContext } from "../context/context";
  * @param globalContext Global Context
  * @param setGlobalContext for updating Cart inside Global Context
  */
-export const addProductToCart = function (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) {
+export const addProductToCart = function (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>) {
 
     // return [index] if product exist in cart - otherwise return [-1]
     const productIndex = globalContext.cart.findIndex(function (item) {
@@ -23,13 +24,23 @@ export const addProductToCart = function (product: ProductRawData, globalContext
 
     if(productIndex !== -1){ // if product exist in cart
         product.cart = product.cart + sellingUnitAmountJump;
-        setGlobalContext({ ...globalContext });
+        // setGlobalContext({ ...globalContext });
+        setGlobalContext(((prevState) => {
+            return (
+                { ...prevState }
+            );
+        }));
     }
     else{ // if product NOT exist in cart
         product.cart = sellingUnitAmountJump;
         const currentCart = globalContext.cart;
         currentCart.push(product);
-        setGlobalContext({ ...globalContext, cart: [ ...currentCart, product ] });
+        // setGlobalContext({ ...globalContext, cart: [ ...currentCart, product ] });
+        setGlobalContext((prevState) => {
+            return (
+                { ...prevState, cart: [ ...currentCart, product ] }
+            );
+        });
     }
 
     calculateCartSum(globalContext, setGlobalContext); // update cart sum
@@ -41,7 +52,7 @@ export const addProductToCart = function (product: ProductRawData, globalContext
  * @param globalContext Global Context
  * @param setGlobalContext for updating Cart inside Global Context
  */
-export const subtractProductFromCart = function (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) {
+export const subtractProductFromCart = function (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>) {
 
     const sellingUnitIndex = product.productSellingUnits.findIndex(function(unit){ // find selected unit type index
         return unit.sellingUnit.name === product.selectedUnitType;
@@ -50,7 +61,12 @@ export const subtractProductFromCart = function (product: ProductRawData, global
 
     if(product.cart > sellingUnitAmountJump){ // if quantity is bigger then 0.5
         product.cart = product.cart - sellingUnitAmountJump;
-        setGlobalContext({ ...globalContext });
+        // setGlobalContext({ ...globalContext });
+        setGlobalContext(((prevState) => {
+            return (
+                { ...prevState }
+            );
+        }));
         calculateCartSum(globalContext, setGlobalContext); // update cart sum
     }
     else if(product.cart <= sellingUnitAmountJump){
@@ -64,13 +80,18 @@ export const subtractProductFromCart = function (product: ProductRawData, global
  * @param globalContext Global Context
  * @param setGlobalContext for updating Cart inside Global Context
  */
-export const removeProductFromCart = function (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) {
+export const removeProductFromCart = function (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>) {
 
     const productIndex = globalContext.cart.findIndex(function (item) { // get product index in cart
         return item.id === product.id;
     });
     product.cart = 0; // reset product sum in cart
-    setGlobalContext({ ...globalContext, cart: globalContext.cart.splice(productIndex, 1) }); // remove product from cart
+    // setGlobalContext({ ...globalContext, cart: globalContext.cart.splice(productIndex, 1) }); // remove product from cart
+    setGlobalContext(((prevState) => {
+        return (
+            { ...prevState, cart: prevState.cart.splice(productIndex, 1) }
+        );
+    }));
     calculateCartSum(globalContext, setGlobalContext); // update cart sum
 }
 
@@ -79,12 +100,17 @@ export const removeProductFromCart = function (product: ProductRawData, globalCo
  * @param globalContext Global Context
  * @param setGlobalContext for updating Cart inside Global Context
  */
-export const calculateCartSum = function (globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) {
+export const calculateCartSum = function (globalContext: GlobalContext, setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>) {
     let sum: number = 0;
     globalContext.cart.forEach(function (product) {
         sum = sum + (product.cart * product.price);
     });
-    setGlobalContext({ ...globalContext, cartSum: sum });
+    // setGlobalContext({ ...globalContext, cartSum: sum });
+    setGlobalContext((prevState) => {
+        return (
+            { ...prevState, cartSum: sum }
+        );
+    });
 }
 
 /**
@@ -92,12 +118,17 @@ export const calculateCartSum = function (globalContext: GlobalContext, setGloba
  * @param globalContext Global Context
  * @param setGlobalContext for updating Cart inside Global Context
  */
-export const emptyCart = function (globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) {
+export const emptyCart = function (globalContext: GlobalContext, setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>) {
     for(let i=globalContext.cart.length-1; i>=0; i--){ // reset each product in the cart + pop out !
         globalContext.cart[i].cart = 0;
         globalContext.cart.pop();
     }
-    setGlobalContext({ ...globalContext, cartSum: 0 });
+    // setGlobalContext({ ...globalContext, cartSum: 0 });
+    setGlobalContext((prevState) => {
+        return (
+            { ...prevState, cartSum: 0 }
+        );
+    });
 }
 
 

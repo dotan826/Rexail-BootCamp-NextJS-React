@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import React, { createContext } from "react";
 import { StoreRawData, ProductRawData } from '../types/appTypes';
 
 export interface GlobalContext {
@@ -13,7 +13,8 @@ export interface GlobalContext {
 
 export interface GlobalContextType {
     globalContext: GlobalContext;
-    setGlobalContext: (globalContext: GlobalContext) => void;
+    // setGlobalContext: (globalContext: GlobalContext) => void;
+    setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>;
 }
 
 export const GlobalContext = createContext<GlobalContextType | null>(null);

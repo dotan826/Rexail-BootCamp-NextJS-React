@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {GetStaticProps} from 'next';
 import {useRouter} from 'next/router';
 
@@ -11,7 +11,7 @@ import SmallFooter from './components/small-footer';
 import SmallCartRow from './components/small-cart-row';
 import ProductCard from './components/product-card';
 
-import { WebProps, MainPageProps, ProductRawData } from './types/appTypes';
+import {WebProps, MainPageProps, ProductRawData, ProductCardProps} from './types/appTypes';
 
 import { addProductToCart, subtractProductFromCart, removeProductFromCart, emptyCart } from './services/productActions';
 import { onChangeDropdownUnitType, toggleOffDropdown, toggleOnDropdownUnitType } from './services/dropdownUtils';
@@ -312,22 +312,22 @@ const Home = function ({}: MainPageProps) {
                                 }
 
                                 {/*Small Cart Rows*/}
-                                {
-                                    globalContext.cart.map((value, index) => {
-                                        return (
-                                            <SmallCartRow
-                                                key={index}
-                                                product={value}
-                                                toggleOffDropdown={toggleOffDropdown}
-                                                toggleOnDropdownUnitType={toggleOnDropdownUnitType}
-                                                onChangeDropdownUnitType={onChangeDropdownUnitType}
-                                                addProductToCart={addProductToCart}
-                                                subtractProductFromCart={subtractProductFromCart}
-                                                removeProductFromCart={removeProductFromCart}
-                                            />
-                                        )
-                                    })
-                                }
+                                {/*{*/}
+                                {/*    globalContext.cart.map((value, index) => {*/}
+                                {/*        return (*/}
+                                {/*            <SmallCartRow*/}
+                                {/*                key={index}*/}
+                                {/*                product={value}*/}
+                                {/*                toggleOffDropdown={toggleOffDropdown}*/}
+                                {/*                toggleOnDropdownUnitType={toggleOnDropdownUnitType}*/}
+                                {/*                onChangeDropdownUnitType={onChangeDropdownUnitType}*/}
+                                {/*                addProductToCart={addProductToCart}*/}
+                                {/*                subtractProductFromCart={subtractProductFromCart}*/}
+                                {/*                removeProductFromCart={removeProductFromCart}*/}
+                                {/*            />*/}
+                                {/*        )*/}
+                                {/*    })*/}
+                                {/*}*/}
 
                             </div>
 
@@ -399,16 +399,26 @@ const Home = function ({}: MainPageProps) {
 
                             {/*Product Cards*/}
                             {
-                                productListToShow?.map((value, index) => {
+                                productListToShow.map((value, index) => {
                                     return (
-                                        <ProductCard
+                                        // <ProductCard
+                                        //     key={index}
+                                        //     onChangeDropdownUnitType={onChangeDropdownUnitType}
+                                        //     product={value}
+                                        //     addProductToCart={addProductToCart}
+                                        //     subtractProductFromCart={subtractProductFromCart}
+                                        //     removeProductFromCart={removeProductFromCart}
+                                        // />
+
+                                        <ProductCardComponentMemo
                                             key={index}
-                                            onChangeDropdownUnitType={onChangeDropdownUnitType}
                                             product={value}
                                             addProductToCart={addProductToCart}
                                             subtractProductFromCart={subtractProductFromCart}
                                             removeProductFromCart={removeProductFromCart}
+                                            onChangeDropdownUnitType={onChangeDropdownUnitType}
                                         />
+
                                     )
                                 })
                             }
@@ -429,6 +439,7 @@ const Home = function ({}: MainPageProps) {
 
 
     );
+
 }
 
 
@@ -437,6 +448,16 @@ export const getStaticProps: GetStaticProps = async function () {
     return {
         props: {} as WebProps
     };
+}
+
+
+const ProductCardComponentMemo = function ({ product, onChangeDropdownUnitType, addProductToCart, subtractProductFromCart, removeProductFromCart }: ProductCardProps) {
+    const ProductCardComponentMemo = useMemo(()=><ProductCard product={product} onChangeDropdownUnitType={onChangeDropdownUnitType} addProductToCart={addProductToCart} subtractProductFromCart={subtractProductFromCart} removeProductFromCart={removeProductFromCart} />, [product]);
+    return (
+        <>
+            {ProductCardComponentMemo}
+        </>
+    );
 }
 
 

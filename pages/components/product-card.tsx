@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, {useContext, useEffect} from 'react';
 import { ProductCardProps } from '../types/appTypes';
 import {GlobalContext, GlobalContextType} from "../context/context";
 
@@ -11,6 +11,8 @@ const ProductCard = function ({
     const {
         globalContext, setGlobalContext
     } = useContext(GlobalContext) as GlobalContextType;
+
+    console.log("Product Card Render : ", product.product.name); // TEST
 
     return (
         <div

@@ -1,4 +1,5 @@
 import {GlobalContext} from "../context/context";
+import React from "react";
 
 /**
  * Store Raw Data (From Server)
@@ -181,9 +182,12 @@ export interface CheckoutPageProps {
 export interface ProductCardProps {
     onChangeDropdownUnitType: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void, unitType: string) => void;
     product: ProductRawData;
-    addProductToCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
-    subtractProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
-    removeProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
+    // addProductToCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
+    // subtractProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
+    // removeProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
+    addProductToCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>) => void;
+    subtractProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>) => void;
+    removeProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: React.Dispatch<React.SetStateAction<GlobalContext>>) => void;
 }
 
 /**
