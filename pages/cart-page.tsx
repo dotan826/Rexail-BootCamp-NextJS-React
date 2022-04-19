@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
-import {GlobalContext, GlobalContextType} from './context/context';
+import {useSelector, useDispatch} from 'react-redux';
+import {RootReducer} from './Redux/reduxTypes';
+import {updatePreparationNotes, resetSearchInput} from './Redux/Actions/storeActions';
 
 import SmallHeader from "./components/small-header";
 import SmallFooter from "./components/small-footer";
@@ -10,34 +11,36 @@ import ProductCard from "./components/product-card";
 
 import { CartPageProps, ProductRawData} from './types/appTypes';
 
-import { toggleOffDropdown, toggleOnDropdownUnitType, toggleOnDropdownCommentType, onChangeDropdownCommentType, onChangeDropdownUnitType } from './services/dropdownUtils';
-import { addProductToCart, subtractProductFromCart, removeProductFromCart } from './services/productActions';
-
 const CartPage = function ({}: CartPageProps) {
+
+    const catalogData = useSelector((state: RootReducer) => state.storeReducer.catalogData);
+    const cartSum = useSelector((state: RootReducer) => state.storeReducer.cartSum);
+    const cart = useSelector((state: RootReducer) => state.storeReducer.cart);
+    const dispatch = useDispatch();
 
     const [youMissedItemsData, setYouMissedItemsData] = useState<ProductRawData[]>([]);
     const [youMissedItemsView, setYouMissedItemsView] = useState<ProductRawData[]>([]);
     const [missedItemsStartIndex, setMissedItemsStartIndex] = useState<number>(2);
     const [missedItemsEndIndex, setMissedItemsEndIndex] = useState<number>(5);
 
-    const {
-        globalContext
-    } = useContext(GlobalContext) as GlobalContextType;
-
     const router = useRouter();
+
+    const handlePreparationNotesChange = function (e: HTMLTextAreaElement) {
+        dispatch(updatePreparationNotes(e.value));
+    }
 
     /**
      * Grill n Random Products.
      * @param n Number of products to randomly grill.
      */
     const grillRandomProducts = function (n: number) {
-        const sumOfAllProducts = globalContext.catalogData.length; // how many products do we have ?
+        const sumOfAllProducts = catalogData.length; // how many products do we have ?
         const randomNumbers: number[] = [];
         for(let i=0; i<n; ){
             const randomNumber = Math.floor(Math.random() * sumOfAllProducts);
             if(!(randomNumbers.includes(randomNumber))){ // if we don't have this random number already
                 randomNumbers.push(randomNumber); // save random number
-                youMissedItemsData.push(globalContext.catalogData[randomNumber]);
+                youMissedItemsData.push(catalogData[randomNumber]);
                 i = i + 1;
             }
         }
@@ -68,6 +71,7 @@ const CartPage = function ({}: CartPageProps) {
 
     useEffect(()=>{
         grillRandomProducts(4);
+        dispatch(resetSearchInput());
     }, []);
 
     return (
@@ -95,12 +99,12 @@ const CartPage = function ({}: CartPageProps) {
                             למכין ההזמנה</p>
                         <textarea
                             className="w-298px h-180px m-t-10px m-r-0 m-b-0 m-l-0 border-radius-6px border-style-solid border-w-1px border-color-light-grey-2 background-color-white-1 text-align-right resize-none"
-                            onChange={(event)=>{globalContext.preparationNotes = event.target.value}}
+                            onChange={(event)=>{handlePreparationNotesChange(event.target)}}
                         />
                         <div
                             className="w-299px h-1px m-b-26px m-t-26px m-r-0 m-l-0 border-style-solid border-w-0-5px border-color-light-grey"/>
                         <div className="flex justify-content-space-between w-299px">
-                            <p className="w-64px h-20px m-b-26px heebo font-s-16px font-w-600 font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px color-black-1">₪{globalContext.cartSum.toFixed(2)}</p>
+                            <p className="w-64px h-20px m-b-26px heebo font-s-16px font-w-600 font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px color-black-1">₪{cartSum.toFixed(2)}</p>
                             <p className="w-94px h-20px m-b-26px rubik font-s-16px font-w-normal font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px text-align-right color-grey-1">סה״כ
                                 סל קניות</p>
                         </div>
@@ -138,7 +142,7 @@ const CartPage = function ({}: CartPageProps) {
                                 <img src={"/icons/cart-page/basket.svg"}
                                      alt="Basket Image with number inside that indicate how many products are in the Cart"
                                      className="w-37px h-32px"/>
-                                <p className="absolute top-14px left-15px font-s-13px color-green-2">{globalContext.cart.length}</p>
+                                <p className="absolute top-14px left-15px font-s-13px color-green-2">{cart.length}</p>
                             </div>
 
                         </div>
@@ -167,19 +171,11 @@ const CartPage = function ({}: CartPageProps) {
 
                             {/*Big Cart Row*/}
                             {
-                                globalContext.cart.map((value, index) => {
+                                cart.map((value, index) => {
                                     return (
                                         <BigCartRow
                                             key={index}
                                             product={value}
-                                            toggleOffDropdown={toggleOffDropdown}
-                                            toggleOnDropdownUnitType={toggleOnDropdownUnitType}
-                                            toggleOnDropdownCommentType={toggleOnDropdownCommentType}
-                                            onChangeDropdownUnitType={onChangeDropdownUnitType}
-                                            onChangeDropdownCommentType={onChangeDropdownCommentType}
-                                            addProductToCart={addProductToCart}
-                                            subtractProductFromCart={subtractProductFromCart}
-                                            removeProductFromCart={removeProductFromCart}
                                         />
                                     )
                                 })
@@ -209,11 +205,7 @@ const CartPage = function ({}: CartPageProps) {
                                     return (
                                         <ProductCard
                                             key={index}
-                                            onChangeDropdownUnitType={onChangeDropdownUnitType}
                                             product={value}
-                                            addProductToCart={addProductToCart}
-                                            subtractProductFromCart={subtractProductFromCart}
-                                            removeProductFromCart={removeProductFromCart}
                                         />
                                     )
                                 })

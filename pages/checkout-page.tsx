@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
-
-import { GlobalContext, GlobalContextType } from './context/context';
+import {useSelector} from 'react-redux';
+import {RootReducer} from './Redux/reduxTypes';
 
 import SmallHeader from "./components/small-header";
 import SmallFooter from "./components/small-footer";
@@ -53,9 +53,8 @@ const validate = (values: any) => {
 
 const CheckoutPage = function ({}: CheckoutPageProps) {
 
-    const {
-        globalContext
-    } = useContext(GlobalContext) as GlobalContextType;
+    const preparationNotes = useSelector((state: RootReducer) => state.storeReducer.preparationNotes);
+    const cartSum = useSelector((state: RootReducer) => state.storeReducer.cartSum);
 
     const formik = useFormik({
         initialValues: {
@@ -131,7 +130,7 @@ const CheckoutPage = function ({}: CheckoutPageProps) {
                             <div className="w-250px align-self-start">
                                 <p className="rubik font-s-13px font-w-normal font-stretch-normal font-style-normal line-h-1-23 letter-spacing-minus-0-2px text-align-right color-grey-1">הערות
                                     למכין ההזמנה</p>
-                                <p className="rubik font-s-15px font-w-normal font-stretch-normal font-style-normal line-h-1-4 letter-spacing-minus-0-2px text-align-right color-grey-3">{globalContext.preparationNotes}</p>
+                                <p className="rubik font-s-15px font-w-normal font-stretch-normal font-style-normal line-h-1-4 letter-spacing-minus-0-2px text-align-right color-grey-3">{preparationNotes}</p>
                             </div>
                         </div>
 
@@ -207,7 +206,7 @@ const CheckoutPage = function ({}: CheckoutPageProps) {
                             className="w-298px h-1px m-t-20px m-b-20px border-style-solid border-w-0-5px border-color-light-grey-4 m-b-17px"/>
 
                         <div className="flex justify-content-space-between m-b-12px">
-                            <p className="heebo font-s-16px font-w-normal font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px color-black-1">₪{globalContext.cartSum.toFixed(2)}</p>
+                            <p className="heebo font-s-16px font-w-normal font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px color-black-1">₪{cartSum.toFixed(2)}</p>
                             <p className="rubik font-s-16px font-w-normal font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px color-grey-1 text-align-right">סה״כ
                                 סל קניות</p>
                         </div>
@@ -224,7 +223,7 @@ const CheckoutPage = function ({}: CheckoutPageProps) {
                         </div>
 
                         <div className="flex justify-content-space-between m-b-12px">
-                            <p className="heebo font-s-16px font-w-500 font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px color-black-1">₪{(globalContext.cartSum + 30).toFixed(2)}</p>
+                            <p className="heebo font-s-16px font-w-500 font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px color-black-1">₪{(cartSum + 30).toFixed(2)}</p>
                             <p className="rubik font-s-16px font-w-500 font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-1px color-black-1 text-align-right">סה״כ
                                 לתשלום</p>
                         </div>
@@ -415,7 +414,7 @@ const CheckoutPage = function ({}: CheckoutPageProps) {
                                     type={"submit"}
                                 >
                                     <label
-                                        className="rubik font-s-18px font-w-500 font-stretch-normal font-style-normal line-h-1-22 letter-spacing-minus-0-1px text-align-center color-white-1 m-r-5px">₪{(globalContext.cartSum + 30).toFixed(2)} | סיום הזמנה</label>
+                                        className="rubik font-s-18px font-w-500 font-stretch-normal font-style-normal line-h-1-22 letter-spacing-minus-0-1px text-align-center color-white-1 m-r-5px">₪{(cartSum + 30).toFixed(2)} | סיום הזמנה</label>
                                     <img src={"/icons/checkout-page/icon-lock-small.svg"}
                                          alt="smlla icon lock indicating secure payment"
                                          className="w-20px h-20px"

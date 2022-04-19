@@ -1,17 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import {useDispatch} from 'react-redux';
+import {addProductToCart, subtractProductFromCart, removeProductFromCart, toggleOffDropdown, toggleOnDropdownUnitType, onChangeDropdownUnitType} from '../Redux/Actions/storeActions';
 
 import { SmallCartRowProps } from '../types/appTypes';
-import { GlobalContext, GlobalContextType } from "../context/context";
 
-const SmallCartRow = function ({
-    product, toggleOffDropdown, toggleOnDropdownUnitType, onChangeDropdownUnitType, addProductToCart, subtractProductFromCart, removeProductFromCart
-                               }: SmallCartRowProps) {
+const SmallCartRow = function ({ product }: SmallCartRowProps) {
 
     const imageUrlBase = "https://s3.eu-central-1.amazonaws.com/images-il.rexail.com/";
 
-    const {
-        globalContext, setGlobalContext
-    } = useContext(GlobalContext) as GlobalContextType;
+    const dispatch = useDispatch();
 
     return (
         <div
@@ -25,11 +22,11 @@ const SmallCartRow = function ({
 
             <div
                 className="w-60px flex flex-direction-column aligns-items-center"
-                onMouseLeave={()=>{toggleOffDropdown(product, globalContext, setGlobalContext)}}
+                onMouseLeave={()=>{dispatch(toggleOffDropdown(product))}}
             >
                 <button
                     className="small-cart-buttons w-20px h-20px m-b-5px border-none background-color-white-1 pointer"
-                    onClick={()=>{addProductToCart(product, globalContext, setGlobalContext)}}
+                    onClick={()=>{dispatch(addProductToCart(product))}}
                 >
                     <img src={"/icons/main-page/icon-plus-circled.svg"} alt="add 1 to product" />
                 </button>
@@ -45,7 +42,7 @@ const SmallCartRow = function ({
                     <div className="small-cart-dropdown dropdown-unit-type m-b-5px">
                         <button
                             className="dropdown-unit-type-button"
-                            onClick={()=>{toggleOnDropdownUnitType(product, globalContext, setGlobalContext)}}
+                            onClick={()=>{dispatch(toggleOnDropdownUnitType(product))}}
                         >{product.selectedUnitType}</button>
                         <div className={"dropdown-unit-type-content " + (product.dropdownOpenState ? ' show-flex ' : '')}>
                             {
@@ -53,7 +50,7 @@ const SmallCartRow = function ({
                                     return (
                                         <a
                                             key={index}
-                                            onClick={()=>{onChangeDropdownUnitType(product, globalContext, setGlobalContext, value.sellingUnit.name)}}
+                                            onClick={()=>{dispatch(onChangeDropdownUnitType(product, value.sellingUnit.name))}}
                                         >{value.sellingUnit.name}</a>
                                     )
                                 })
@@ -77,7 +74,7 @@ const SmallCartRow = function ({
 
                 <button
                     className="small-cart-buttons w-20px h-20px border-none background-color-white-1 pointer"
-                    onClick={()=>{subtractProductFromCart(product, globalContext, setGlobalContext)}}
+                    onClick={()=>{dispatch(subtractProductFromCart(product))}}
                 >
                     <img src={"/icons/main-page/icon-minus-circled.svg"} alt="remove 1 from product" />
                 </button>
@@ -103,7 +100,7 @@ const SmallCartRow = function ({
 
             <button
                 className="small-cart-buttons absolute top-40px right-20px border-none w-20px h-20px border-radius-10px color-white-1 background-color-red-1 pointer"
-                onClick={()=>{removeProductFromCart(product, globalContext, setGlobalContext)}}
+                onClick={()=>{dispatch(removeProductFromCart(product))}}
             >X
             </button>
 

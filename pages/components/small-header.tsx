@@ -1,18 +1,19 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import Link from 'next/link';
 
-import {GlobalContext, GlobalContextType} from '../context/context';
-
 import {SmallHeaderProps} from '../types/appTypes';
+import {useDispatch, useSelector} from "react-redux";
+import {RootReducer} from "../Redux/reduxTypes";
+import {updateSearchInput} from '../Redux/Actions/storeActions';
 
 const SmallHeader = function ({mainPage = false, cartPage = false, checkoutPage = false}: SmallHeaderProps) {
 
-    const {
-        globalContext, setGlobalContext
-    } = useContext(GlobalContext) as GlobalContextType;
+    const storeData = useSelector((state: RootReducer) => state.storeReducer.storeData);
+    const searchValue = useSelector((state: RootReducer) => state.storeReducer.searchValue);
+    const dispatch = useDispatch();
 
     const handleInputSearchChange = function (e: HTMLInputElement) {
-        setGlobalContext({ ...globalContext, searchValue: e.value });
+        dispatch(updateSearchInput(e.value));
     }
 
     return (
@@ -86,7 +87,7 @@ const SmallHeader = function ({mainPage = false, cartPage = false, checkoutPage 
                                 placeholder="חיפוש מוצר"
                                 className="rtl w-300px h-32px border-w-1-5px border-style-solid border-color-white border-radius-20px background-color-trans color-white-1 p-r-40px opacity-0-8 rubik font-s-14px font-w-normal font-stretch-normal font-style-normal line-h-1-29 letter-spacing-minus-0-1px"
                                 onChange={(e)=>{handleInputSearchChange(e.target)}}
-                                value={globalContext.searchValue}
+                                value={searchValue}
                             />
                             <img src={"/icons/header/icon-search.svg"} alt="Search Icon"
                                  className="absolute top-9px right-13px"/>
@@ -96,7 +97,7 @@ const SmallHeader = function ({mainPage = false, cartPage = false, checkoutPage 
 
                 <div className="w-33p flex justify-content-end aligns-items-center">
                     <p className="heebo font-s-30px font-w-bold font-stretch-normal font-style-normal line-h-1-13 letter-spacing-normal text-align-right color-white-1 m-r-15px">
-                        {globalContext.storeData.store.name}
+                        {storeData.store.name}
                     </p>
                     <Link href={"/"}>
                         <img src={"/images/header/big-header-logo.png"} alt="Store Logo"

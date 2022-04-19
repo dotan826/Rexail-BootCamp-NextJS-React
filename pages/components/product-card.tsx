@@ -1,16 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { ProductCardProps } from '../types/appTypes';
-import {GlobalContext, GlobalContextType} from "../context/context";
+import {useDispatch} from 'react-redux';
+import {addProductToCart, subtractProductFromCart, onChangeDropdownUnitType} from '../Redux/Actions/storeActions';
 
-const ProductCard = function ({
-    product, onChangeDropdownUnitType, addProductToCart, subtractProductFromCart
-                              }: ProductCardProps) {
+const ProductCard = function ({ product }: ProductCardProps) {
 
     const imageUrlBase = "https://s3.eu-central-1.amazonaws.com/images-il.rexail.com/";
 
-    const {
-        globalContext, setGlobalContext
-    } = useContext(GlobalContext) as GlobalContextType;
+    const dispatch = useDispatch();
 
     return (
         <div
@@ -97,7 +94,7 @@ const ProductCard = function ({
                                                    type="radio"
                                                    name="unitType"
                                                    value={sellingUnit.sellingUnit.name}
-                                                   onClick={()=>{onChangeDropdownUnitType(product, globalContext, setGlobalContext, sellingUnit.sellingUnit.name)}}
+                                                   onClick={()=>{dispatch(onChangeDropdownUnitType(product, sellingUnit.sellingUnit.name))}}
                                             />
                                         </label>
                                     )
@@ -111,7 +108,7 @@ const ProductCard = function ({
                             <div className="w-126px flex">
                                 <button
                                     className="plusMinusButtonsHover w-126px border-none background-color-green-2 rubik color-white-1 border-radius-20px flex justify-content-center aligns-items-center font-s-16px pointer rtl"
-                                    onClick={()=>{addProductToCart(product, globalContext, setGlobalContext)}}
+                                    onClick={()=>{dispatch(addProductToCart(product))}}
                                 >+&nbsp;&nbsp;הוספה לסל
                                 </button>
                             </div>
@@ -121,13 +118,13 @@ const ProductCard = function ({
                             <div className="w-126px flex">
                                 <button
                                     className="plusMinusButtonsHover w-42px border-none background-color-green-2 rubik color-white-1 border-radius-bottom-left-20px border-radius-top-left-20px flex justify-content-center aligns-items-center font-s-20px pointer"
-                                    onClick={()=>{subtractProductFromCart(product, globalContext, setGlobalContext)}}
+                                    onClick={()=>{dispatch(subtractProductFromCart(product))}}
                                 >-
                                 </button>
                                 <p className="w-42px background-color-green-2 rubik color-white-1 flex justify-content-center aligns-items-center font-s-16px">{product.cart}</p>
                                 <button
                                     className="plusMinusButtonsHover w-42px border-none background-color-green-2 rubik color-white-1 border-radius-top-right-20px border-radius-bottom-right-20px flex justify-content-center aligns-items-center font-s-20px pointer"
-                                    onClick={()=>{addProductToCart(product, globalContext, setGlobalContext)}}
+                                    onClick={()=>{dispatch(addProductToCart(product))}}
                                 >+
                                 </button>
                             </div>

@@ -1,8 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {GetStaticProps} from 'next';
 import {useRouter} from 'next/router';
-
-import {GlobalContext, GlobalContextType} from './context/context';
+import Link from 'next/link';
+import {useSelector, useDispatch} from 'react-redux';
+import {RootReducer} from './Redux/reduxTypes';
+import {emptyCart} from './Redux/Actions/storeActions';
 
 import BigHeader from './components/big-header';
 import SmallHeader from './components/small-header';
@@ -13,18 +15,18 @@ import ProductCard from './components/product-card';
 
 import { WebProps, MainPageProps, ProductRawData } from './types/appTypes';
 
-import { addProductToCart, subtractProductFromCart, removeProductFromCart, emptyCart } from './services/productActions';
-import { onChangeDropdownUnitType, toggleOffDropdown, toggleOnDropdownUnitType } from './services/dropdownUtils';
-
 const Home = function ({}: MainPageProps) {
 
-    const {
-        globalContext, setGlobalContext
-    } = useContext(GlobalContext) as GlobalContextType;
+    const catalogData = useSelector((state: RootReducer) => state.storeReducer.catalogData);
+    const searchValue = useSelector((state: RootReducer) => state.storeReducer.searchValue);
+    const categoriesWithProductsList = useSelector((state: RootReducer) => state.storeReducer.categoriesWithProductsList);
+    const cart = useSelector((state: RootReducer) => state.storeReducer.cart);
+    const cartSum = useSelector((state: RootReducer) => state.storeReducer.cartSum);
+    const dispatch = useDispatch();
 
     const [selectedCategory, setSelectedCategory] = useState<string>("כל המוצרים");
     const [categoryPopupHover, setCategoryPopupHover] = useState<boolean>(false);
-    const [productListToShow, setProductListToShow] = useState<ProductRawData[]>(globalContext.catalogData);
+    const [productListToShow, setProductListToShow] = useState<ProductRawData[]>(catalogData);
     const [dropdownSelectedSortType, setDropdownSelectedSortType] = useState<string>("מיין לפי");
     const [toggleDropdownSort, setToggleDropdownSort] = useState<boolean>(false);
 
@@ -33,30 +35,30 @@ const Home = function ({}: MainPageProps) {
             let filteredSearch: any[];
             if(selectedCategory === "כל המוצרים"){
                 // Get All Products & filter names :
-                filteredSearch = globalContext.catalogData.filter((product)=>{
-                    return (product.product.name.includes(globalContext.searchValue));
+                filteredSearch = catalogData.filter((product)=>{
+                    return (product.product.name.includes(searchValue));
                 });
             }
             else if(selectedCategory === "מבצעים"){
                 // Get Sales Products :
-                let currentCategoryProducts: ProductRawData[] = globalContext.catalogData.filter(function (product) {
+                let currentCategoryProducts: ProductRawData[] = catalogData.filter(function (product) {
                     return product.promoted;
                 });
                 // Filter by Names :
                 filteredSearch = currentCategoryProducts.filter((product)=>{
-                    return (product.product.name.includes(globalContext.searchValue));
+                    return (product.product.name.includes(searchValue));
                 });
             }
             else{
                 // Get Current Category Index :
-                const categoryIndex: number = globalContext.categoriesWithProductsList.findIndex(function (category) {
+                const categoryIndex: number = categoriesWithProductsList.findIndex(function (category) {
                     return category[0] === selectedCategory;
                 });
                 // Get Current Category Products :
-                let currentCategoryProducts: ProductRawData[] = globalContext.categoriesWithProductsList[categoryIndex][1];
+                let currentCategoryProducts: ProductRawData[] = categoriesWithProductsList[categoryIndex][1];
                 // Filter by Names :
                 filteredSearch = currentCategoryProducts.filter((product)=>{
-                    return (product.product.name.includes(globalContext.searchValue));
+                    return (product.product.name.includes(searchValue));
                 });
             }
             setProductListToShow(filteredSearch);
@@ -65,7 +67,7 @@ const Home = function ({}: MainPageProps) {
         return function cleanup(){
             clearTimeout(debounce);
         }
-    }, [globalContext.searchValue]);
+    }, [searchValue]);
 
     const router = useRouter();
 
@@ -77,18 +79,18 @@ const Home = function ({}: MainPageProps) {
         setDropdownSelectedSortType("מיין לפי"); // reset sort option
         setSelectedCategory(categoryName);
         if(categoryName === "כל המוצרים"){
-            setProductListToShow(globalContext.catalogData);
+            setProductListToShow(catalogData);
         }
         else if(categoryName === "מבצעים"){
-            setProductListToShow(globalContext.catalogData.filter(function (product) {
+            setProductListToShow(catalogData.filter(function (product) {
                 return product.promoted;
             }));
         }
         else {
-            const categoryIndex = globalContext.categoriesWithProductsList.findIndex(function (category) {
+            const categoryIndex = categoriesWithProductsList.findIndex(function (category) {
                 return category[0] === categoryName;
             });
-            setProductListToShow((globalContext.categoriesWithProductsList)[categoryIndex as number][1]);
+            setProductListToShow((categoriesWithProductsList)[categoryIndex as number][1]);
         }
     }
 
@@ -187,7 +189,7 @@ const Home = function ({}: MainPageProps) {
                         </div>
 
                         {
-                            globalContext.categoriesWithProductsList.slice(0, 10).map((value, index) => {
+                            categoriesWithProductsList.slice(0, 10).map((value, index) => {
                                 return (
                                     <p
                                         className={"category-hover-effect w-100p h-100p p-5px flex justify-content-center aligns-items-center pointer rubik font-s-16px font-w-normal font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px text-align-center color-grey-3 white-space-nowrap " + (selectedCategory === value[0] ? ' category-active-effect ' : '')}
@@ -215,7 +217,7 @@ const Home = function ({}: MainPageProps) {
                             >
 
                                 {
-                                    globalContext.categoriesWithProductsList.slice(10).map((value, index) => {
+                                    categoriesWithProductsList.slice(10).map((value, index) => {
                                         return (
                                             <p
                                                 className={"category-hover-effect w-100p pointer p-5px white-space-nowrap rubik font-s-16px font-w-normal font-stretch-normal font-style-normal line-h-1-25 letter-spacing-minus-0-2px color-grey-3 " + (selectedCategory === value[0] ? ' category-active-effect ' : '')}
@@ -245,14 +247,14 @@ const Home = function ({}: MainPageProps) {
                                     onClick={() => {
                                         router.push("/cart-page")
                                     }}
-                                    disabled={globalContext.cart.length === 0}
+                                    disabled={cart.length === 0}
                                 >
                                     המשך לתשלום
                                 </button>
                                 <div className="h-46px flex flex-direction-column justify-content-center">
                                     <p className="rubik font-s-14px font-w-normal font-stretch-normal font-style-normal line-h-1-29 letter-spacing-minus-0-1px text-align-right color-white-1 w-82px">סל
                                         הקניות שלי</p>
-                                    <p className="heebo font-s-18px font-w-600 font-stretch-normal font-style-normal line-h-1-22 letter-spacing-minus-0-4px text-align-right color-white-1">₪{globalContext.cartSum.toFixed(2)}</p>
+                                    <p className="heebo font-s-18px font-w-600 font-stretch-normal font-style-normal line-h-1-22 letter-spacing-minus-0-4px text-align-right color-white-1">₪{cartSum.toFixed(2)}</p>
                                 </div>
                                 <div className="w-37px h-32px relative">
                                     <img src={"/icons/main-page/busket.svg"}
@@ -260,7 +262,7 @@ const Home = function ({}: MainPageProps) {
                                          width="37"
                                          height="32"
                                     />
-                                    <p className="absolute top-14px left-15px font-s-13px color-white-1">{globalContext.cart.length}</p>
+                                    <p className="absolute top-14px left-15px font-s-13px color-white-1">{cart.length}</p>
                                 </div>
                                 <img src={"/icons/main-page/button-arrow-up.svg"}
                                      alt="Arrow pointing up for hiding the basket"
@@ -272,10 +274,10 @@ const Home = function ({}: MainPageProps) {
                                 className="w-320px h-32px flex justify-content-space-between aligns-items-center p-r-16px p-l-16px background-color-grey-3">
                                 <div className="flex w-144px">
                                     {
-                                        globalContext.cart.length >= 1 &&
+                                        cart.length >= 1 &&
                                         <div
                                             className="flex pointer"
-                                            onClick={()=>{emptyCart(globalContext, setGlobalContext)}}
+                                            onClick={()=>{dispatch(emptyCart())}}
                                         >
                                             <p className="rubik font-s-14px font-w-normal font-stretch-normal font-style-normal line-h-1-29 letter-spacing-minus-0-1px text-align-right color-grey-3 m-r-5px">מחיקת
                                                 סל</p>
@@ -300,7 +302,7 @@ const Home = function ({}: MainPageProps) {
 
                             <div className="w-330px h-310px p-r-17px background-color-special-small-cart-row overflow-y-auto overflow-x-hide rtl">
                                 {
-                                    globalContext.cart.length === 0 &&
+                                    cart.length === 0 &&
                                     <div className="w-320px h-310px relative">
                                         <img src={"/images/main-page/empty-basket.png"}
                                              alt="empty basket picture"
@@ -313,17 +315,11 @@ const Home = function ({}: MainPageProps) {
 
                                 {/*Small Cart Rows*/}
                                 {
-                                    globalContext.cart.map((value, index) => {
+                                    cart.map((value, index) => {
                                         return (
                                             <SmallCartRow
                                                 key={index}
                                                 product={value}
-                                                toggleOffDropdown={toggleOffDropdown}
-                                                toggleOnDropdownUnitType={toggleOnDropdownUnitType}
-                                                onChangeDropdownUnitType={onChangeDropdownUnitType}
-                                                addProductToCart={addProductToCart}
-                                                subtractProductFromCart={subtractProductFromCart}
-                                                removeProductFromCart={removeProductFromCart}
                                             />
                                         )
                                     })
@@ -338,9 +334,9 @@ const Home = function ({}: MainPageProps) {
                                     onClick={() => {
                                         router.push("/cart-page")
                                     }}
-                                    disabled={globalContext.cart.length === 0}
+                                    disabled={cart.length === 0}
                                 >
-                                    <p className="w-104px border-radius-bottom-left-6px border-radius-top-left-6px background-color-green-3 h-100p flex justify-content-center aligns-items-center rubik font-s-18px font-w-500 font-stretch-normal font-style-normal line-h-1-22 letter-spacing-minus-0-1px color-white-1">₪{globalContext.cartSum.toFixed(2)}</p>
+                                    <p className="w-104px border-radius-bottom-left-6px border-radius-top-left-6px background-color-green-3 h-100p flex justify-content-center aligns-items-center rubik font-s-18px font-w-500 font-stretch-normal font-style-normal line-h-1-22 letter-spacing-minus-0-1px color-white-1">₪{cartSum.toFixed(2)}</p>
                                     <p className="w-184px border-radius-top-right-6px border-radius-bottom-right-6px background-color-green-2 h-100p flex justify-content-center aligns-items-center heebo font-s-18px font-w-600 font-stretch-normal font-style-normal line-h-1-22 letter-spacing-minus-0-4px color-white-1">המשך
                                         לתשלום</p>
                                 </button>
@@ -403,11 +399,7 @@ const Home = function ({}: MainPageProps) {
                                     return (
                                         <ProductCard
                                             key={index}
-                                            onChangeDropdownUnitType={onChangeDropdownUnitType}
                                             product={value}
-                                            addProductToCart={addProductToCart}
-                                            subtractProductFromCart={subtractProductFromCart}
-                                            removeProductFromCart={removeProductFromCart}
                                         />
                                     )
                                 })

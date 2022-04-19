@@ -152,6 +152,7 @@ export interface WebProps {
     storeDataResponse?: any;
     catalogDataResponse?: any;
     categoriesWithProductsListSorted?: any;
+    isServer?: boolean;
 }
 
 /**
@@ -179,11 +180,7 @@ export interface CheckoutPageProps {
  * Product Card Props
  */
 export interface ProductCardProps {
-    onChangeDropdownUnitType: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void, unitType: string) => void;
     product: ProductRawData;
-    addProductToCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
-    subtractProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
-    removeProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
 }
 
 /**
@@ -191,12 +188,6 @@ export interface ProductCardProps {
  */
 export interface SmallCartRowProps {
     product: ProductRawData;
-    onChangeDropdownUnitType: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void, unitType: string) => void;
-    toggleOffDropdown: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void,
-    toggleOnDropdownUnitType: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void,
-    addProductToCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
-    subtractProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
-    removeProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
 }
 
 /**
@@ -204,14 +195,6 @@ export interface SmallCartRowProps {
  */
 export interface BigCartRowProps {
     product: ProductRawData;
-    toggleOffDropdown: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void,
-    toggleOnDropdownUnitType: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void,
-    toggleOnDropdownCommentType: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void,
-    onChangeDropdownUnitType: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void, unitType: string) => void;
-    onChangeDropdownCommentType: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void, commentType: string) => void,
-    addProductToCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
-    subtractProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
-    removeProductFromCart: (product: ProductRawData, globalContext: GlobalContext, setGlobalContext: (globalContext: GlobalContext) => void) => void;
 }
 
 /**

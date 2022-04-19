@@ -1,17 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import {useDispatch} from 'react-redux';
+import {addProductToCart, subtractProductFromCart, removeProductFromCart, toggleOffDropdown, toggleOnDropdownUnitType, toggleOnDropdownCommentType, onChangeDropdownUnitType, onChangeDropdownCommentType} from '../Redux/Actions/storeActions';
 
 import { BigCartRowProps } from '../types/appTypes';
-import { GlobalContext, GlobalContextType } from "../context/context";
 
-const BigCartRow = function ({
-    product, toggleOffDropdown, toggleOnDropdownCommentType, toggleOnDropdownUnitType, onChangeDropdownUnitType, onChangeDropdownCommentType, addProductToCart, subtractProductFromCart, removeProductFromCart
-                             }: BigCartRowProps) {
+const BigCartRow = function ({ product }: BigCartRowProps) {
 
     const imageUrlBase = "https://s3.eu-central-1.amazonaws.com/images-il.rexail.com/";
 
-    const {
-        globalContext, setGlobalContext
-    } = useContext(GlobalContext) as GlobalContextType;
+    const dispatch = useDispatch();
 
     return (
         <div
@@ -20,7 +17,7 @@ const BigCartRow = function ({
             <div className="w-85px flex justify-content-center">
                 <button
                     className="border-none w-20px h-20px border-radius-10px color-white-1 background-color-red-1 pointer"
-                    onClick={()=>{removeProductFromCart(product, globalContext, setGlobalContext)}}>X
+                    onClick={()=>{dispatch(removeProductFromCart(product))}}>X
                 </button>
             </div>
 
@@ -29,14 +26,14 @@ const BigCartRow = function ({
             </div>
 
             <div className="w-85px h-100px flex justify-content-center aligns-items-center"
-                onMouseLeave={()=>{toggleOffDropdown(product, globalContext, setGlobalContext)}}
+                onMouseLeave={()=>{dispatch(toggleOffDropdown(product))}}
             >
                 <div className="w-85p h-60px flex justify-content-center aligns-items-center flex-direction-column">
 
                     <div className="w-65px flex justify-content-center">
                         <button
                             className="small-cart-buttons w-20px h-20px border-none background-color-white-1 pointer"
-                            onClick={()=>{subtractProductFromCart(product, globalContext, setGlobalContext)}}
+                            onClick={()=>{dispatch(subtractProductFromCart(product))}}
                         >
                             <img src={"/icons/main-page/icon-minus-circled.svg"}
                                  alt="remove 1 from product"
@@ -45,7 +42,7 @@ const BigCartRow = function ({
                         <p className="m-r-10px m-l-10px heebo font-s-16px font-w-600 font-stretch-normal font-style-normal line-h-1-13 letter-spacing-minus-0-3px text-align-center color-black-1">{product.cart}</p>
                         <button
                             className="small-cart-buttons w-20px h-20px border-none background-color-white-1 pointer"
-                            onClick={()=>{addProductToCart(product, globalContext, setGlobalContext)}}
+                            onClick={()=>{dispatch(addProductToCart(product))}}
                         >
                             <img src={"/icons/main-page/icon-plus-circled.svg"}
                                  alt="add 1 to product"
@@ -60,7 +57,7 @@ const BigCartRow = function ({
                         product.productSellingUnits.length > 1 &&
                         <div className="small-cart-dropdown dropdown-unit-type-product-row m-b-5px w-65px">
                             <button className="dropdown-unit-type-button"
-                                    onClick={()=>{toggleOnDropdownUnitType(product, globalContext, setGlobalContext)}}
+                                    onClick={()=>{dispatch(toggleOnDropdownUnitType(product))}}
                             >{product.selectedUnitType}</button>
                             <div className={"dropdown-unit-type-content " + (product.dropdownOpenState ? ' show-flex ' : '')}>
                                 {
@@ -68,7 +65,7 @@ const BigCartRow = function ({
                                         return (
                                             <a
                                                 key={index}
-                                                onClick={()=>{onChangeDropdownUnitType(product, globalContext, setGlobalContext, value.sellingUnit.name)}}
+                                                onClick={()=>{dispatch(onChangeDropdownUnitType(product, value.sellingUnit.name))}}
                                             >{value.sellingUnit.name}</a>
                                         )
                                     })
@@ -98,7 +95,7 @@ const BigCartRow = function ({
             </div>
 
             <div className="w-362px h-100px flex justify-content-end aligns-items-center p-r-20px"
-                 onMouseLeave={()=>{toggleOffDropdown(product, globalContext, setGlobalContext)}}
+                 onMouseLeave={()=>{dispatch(toggleOffDropdown(product))}}
             >
                 <div className="flex flex-direction-column justify-content-center aligns-items-end">
                     <p className="m-r-10px flex justify-content-center aligns-items-center heebo font-s-16px font-w-normal font-stretch-normal font-style-normal line-h-1-13 letter-spacing-minus-0-2px text-align-center color-black-1">{product.product.name}</p>
@@ -108,7 +105,7 @@ const BigCartRow = function ({
                         product.commentType &&
                         <div className="dropdown-comment-type-product-row">
                             <button className="dropdown-comment-type-button"
-                                    onClick={()=>{toggleOnDropdownCommentType(product, globalContext, setGlobalContext)}}
+                                    onClick={()=>{dispatch(toggleOnDropdownCommentType(product))}}
                             >{product.commentType.selectedCommentType}</button>
                             <div className={"dropdown-comment-type-content " + (product.commentType.dropdownOpenStateCommentType ? ' show-flex ' : '')}>
                                 {
@@ -116,7 +113,7 @@ const BigCartRow = function ({
                                         return (
                                             <a
                                                 key={index}
-                                                onClick={()=>{onChangeDropdownCommentType(product, globalContext, setGlobalContext, commentType.name)}}
+                                                onClick={()=>{dispatch(onChangeDropdownCommentType(product, commentType.name))}}
                                             >{commentType.name}</a>
                                         )
                                     })

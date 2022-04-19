@@ -1,74 +1,74 @@
-import type { AppProps } from 'next/app';
+import type {AppProps} from 'next/app';
 import App from 'next/app';
-import { useState } from 'react';
-import { GlobalContext, GlobalContextType } from './context/context';
-
-import { WebProps } from './types/appTypes';
-
-import { fetchStoreDetails, fetchCatalog, sortCatalog } from './services/initServerCalls';
-
+import {WebProps} from './types/appTypes';
+import {fetchStoreDetails, fetchCatalog, sortCatalog} from './services/initServerCalls';
 import "../styles/style.css";
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
+import rootReducer from './Redux/Reducers/index';
+import {InitialStoreState} from "./Redux/reduxTypes";
+import {useMemo} from "react";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({Component, pageProps}: AppProps) {
 
-  const [globalContext, setGlobalContext] = useState<GlobalContext>({
-    storeData: (pageProps as WebProps).storeDataResponse,
-    catalogData: (pageProps as WebProps).catalogDataResponse,
-    categoriesWithProductsList: (pageProps as WebProps).categoriesWithProductsListSorted,
-    cart: [],
-    cartSum: 0,
-    searchValue: "",
-    preparationNotes: ""
-  });
+    // Will Always create the store and keep the same reference
+    const store = useMemo(()=>{
+        const initialStoreStateObject: InitialStoreState = {
+            storeData: (pageProps as WebProps).storeDataResponse,
+            catalogData: (pageProps as WebProps).catalogDataResponse,
+            categoriesWithProductsList: (pageProps as WebProps).categoriesWithProductsListSorted,
+            cart: [],
+            cartSum: 0,
+            searchValue: "",
+            preparationNotes: ""
+        }
 
-  // Context Provider Value Object
-  const globalContextValues: GlobalContextType = {
-    globalContext: globalContext,
-    setGlobalContext: setGlobalContext
-  }
+        // const store = createStore(storeReducer, initialStoreStateObject);
+        return createStore(rootReducer, {storeReducer: initialStoreStateObject});
 
-  // Per-Page Props (pages initialization)
-  pageProps = {
-    ...pageProps,
-  }
+    }, []);
 
-  return (
-      <GlobalContext.Provider value={globalContextValues}>
-        <Component {...pageProps} />
-      </GlobalContext.Provider>
-  );
+    // Per-Page Props (pages initialization)
+    pageProps = {
+        ...pageProps,
+    }
+
+    return (
+        <Provider store={store}>
+            <Component {...pageProps} />
+        </Provider>
+    );
 }
-
-
-
-
 
 
 MyApp.getInitialProps = async function (appContext: any) {
 
-  let pagePropsValues = {};
+    let pagePropsValues = {};
 
-  if(typeof window === "undefined"){ // RUN ONLY ON SERVER (First Load)
+    if (typeof window === "undefined") { // RUN ONLY ON SERVER (First Load)
 
-    const storeData = await fetchStoreDetails();
-    const storeCatalog = await fetchCatalog(storeData.jsonWebEncryption);
-    const catalogSorted = await sortCatalog(await storeCatalog);
+        const storeData = await fetchStoreDetails();
+        const storeCatalog = await fetchCatalog(storeData.jsonWebEncryption);
+        const catalogSorted = await sortCatalog(await storeCatalog);
 
-    pagePropsValues = {
-      storeDataResponse: storeData,
-      catalogDataResponse: storeCatalog,
-      categoriesWithProductsListSorted: catalogSorted
+        pagePropsValues = {
+            storeDataResponse: storeData,
+            catalogDataResponse: storeCatalog,
+            categoriesWithProductsListSorted: catalogSorted,
+            isServer: true
+        }
+
+    } else { // RUN ONLY ON CLIENT (Every Other Load)
+
+        pagePropsValues = {
+            isServer: false
+        };
+
     }
 
-  }
-  else{ // RUN ONLY ON CLIENT (Every Other Load)
+    const initialProps = await App.getInitialProps(appContext);
 
-
-  }
-
-  const initialProps = await App.getInitialProps(appContext);
-
-  return { pageProps: pagePropsValues , ...initialProps.pageProps };
+    return {pageProps: pagePropsValues, ...initialProps.pageProps};
 }
 
 export default MyApp;
